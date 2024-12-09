@@ -1,0 +1,15 @@
+{
+    "name": "personal-closet-backend",
+    "version": "1.0.0",
+    "description": "Backend for Personal Closet App",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.0",
+        "express": "^4.17.1",
+        "mongodb": "^6.11.0",
+        "mongoose": "^6.0.0"
+    }
+}
