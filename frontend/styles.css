@@ -23,7 +23,7 @@ button {
     font-family: 'Outfit', sans-serif; /* Apply Outfit font globally to all buttons */
     font-size: 16px;
     font-weight: bold; /* Optional: Adjust weight */
-    color: #d6cb8abd; /* Text color */
+    color: #3f3b24bd; /* Text color */
     background-color: #e5ebceb7;
     border: none;
     border-radius: 5px;
@@ -46,7 +46,7 @@ button:hover {
     font-weight: bold; /* Optional: Adjust font weight */
     padding: 10px 20px;
     background-color: #e5ebceb7;
-    color: #d6cb8abd;
+    color: #3f3b24bd;
     border: none;
     border-radius: 4px;
     cursor: pointer;
