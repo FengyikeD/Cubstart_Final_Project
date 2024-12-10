@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     console.log("DOM fully loaded");
 
     // Toggle the visibility of the Add Clothes section
@@ -53,46 +53,52 @@ async function deleteClothingItem(id, name) {
 
     // Render clothes in the gallery
     function renderClothes(clothes) {
-        const clothesContainer = document.getElementById("clothes-container");
-        if (!clothesContainer) {
-            console.error("Clothes container not found!");
-            return;
-        }
+    const clothesContainer = document.getElementById("clothes-container");
+    const clothesCount = document.getElementById("clothes-count");
     
-        clothesContainer.innerHTML = "";
-        clothes.forEach(item => {
-            const itemDiv = document.createElement("div");
-            itemDiv.classList.add("clothing-item");
-    
-            itemDiv.innerHTML = `
-                <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>Brand: ${item.brand || "N/A"}</p>
-                <p>Color: ${item.color || "N/A"}</p>
-                <p>Tags: ${item.tags ? item.tags.join(", ") : "None"}</p>
-                <p>Price: $${item.price || "N/A"}</p>
-                <p>Time of Purchase: ${item.time_of_purchase || "N/A"}</p>
-                <p>Dry Wash: ${item.needs_dry_washing ? "Yes" : "No"}</p>
-                <button class="delete-btn" data-id="${item._id}" data-name="${item.name}">Delete</button>
-            `;
-    
-            clothesContainer.appendChild(itemDiv);
+    if (!clothesContainer) {
+        console.error("Clothes container not found!");
+        return;
+    }
+
+    clothesContainer.innerHTML = "";
+
+    clothes.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("clothing-item");
+
+        itemDiv.innerHTML = `
+            <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <p>Brand: ${item.brand || "N/A"}</p>
+            <p>Color: ${item.color || "N/A"}</p>
+            <p>Tags: ${item.tags ? item.tags.join(", ") : "None"}</p>
+            <p>Price: $${item.price || "N/A"}</p>
+            <p>Time of Purchase: ${item.time_of_purchase || "N/A"}</p>
+            <p>Dry Wash: ${item.needs_dry_washing ? "Yes" : "No"}</p>
+            <button class="delete-btn" data-id="${item._id}" data-name="${item.name}">Delete</button>
+        `;
+
+        clothesContainer.appendChild(itemDiv);
+    });
+
+    // Update the count of displayed clothes
+    clothesCount.textContent = `${clothes.length} Pieces of Clothes Displayed`;
+
+    if (clothes.length === 0) {
+        clothesContainer.innerHTML = "<p>No clothes found.</p>";
+    }
+
+    // Add event listeners for delete buttons
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            const id = event.target.getAttribute("data-id");
+            const name = event.target.getAttribute("data-name");
+            deleteClothingItem(id, name);
         });
-    
-        // Add event listeners for delete buttons
-        const deleteButtons = document.querySelectorAll(".delete-btn");
-        deleteButtons.forEach(button => {
-            button.addEventListener("click", (event) => {
-                const id = event.target.getAttribute("data-id");
-                const name = event.target.getAttribute("data-name");
-                deleteClothingItem(id, name);
-            });
-        });
-    
-        if (clothes.length === 0) {
-            clothesContainer.innerHTML = "<p>No clothes found.</p>";
-        }
-    }    
+    });
+}    
 
     // Add a clothing item to the backend
     async function addClothingItem(formData) {
