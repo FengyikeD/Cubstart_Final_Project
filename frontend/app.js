@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const BASE_URL = "https://cubstart-final-project.onrender.com/api/clothes";
 
+    // Fetch clothes from backend and render them
     async function fetchClothes() {
         try {
             const response = await fetch(BASE_URL);
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Render clothes in the gallery
     function renderClothes(clothes) {
         const clothesContainer = document.getElementById("clothes-container");
         if (!clothesContainer) {
@@ -28,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             itemDiv.classList.add("clothing-item");
 
             itemDiv.innerHTML = `
-                <img src="${item.image_url}" alt="${item.name}">
+                <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}">
                 <h3>${item.name}</h3>
                 <p>Brand: ${item.brand || "N/A"}</p>
                 <p>Color: ${item.color || "N/A"}</p>
@@ -39,56 +41,57 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             clothesContainer.appendChild(itemDiv);
         });
+
         if (clothes.length === 0) {
             clothesContainer.innerHTML = "<p>No clothes found.</p>";
         }
     }
 
-    async function addClothingItem(clothing) {
+    // Add a clothing item to the backend
+    async function addClothingItem(formData) {
         try {
             const response = await fetch(BASE_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(clothing),
+                body: formData, // Send FormData with file and text data
             });
             if (!response.ok) throw new Error(`Failed to add clothing item: ${response.statusText}`);
             console.log("Added Clothing Item:", await response.json());
-            fetchClothes();
+            fetchClothes(); // Refresh the gallery
         } catch (error) {
             console.error("Error adding clothing item:", error);
         }
     }
 
-    // Safely add event listeners
+    // Handle the upload form submission
     const uploadForm = document.getElementById("upload-form");
     if (uploadForm) {
         uploadForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            const clothing = {
-                name: document.getElementById("name").value,
-                brand: document.getElementById("brand").value,
-                color: document.getElementById("color").value,
-                texture: document.getElementById("texture").value,
-                tags: document.getElementById("tags").value.split(","),
-                price: parseFloat(document.getElementById("price").value),
-                time_of_purchase: document.getElementById("time-of-purchase").value,
-                needs_dry_washing: document.getElementById("needs-dry-washing").checked,
-            };
+
+            // Create FormData to handle file uploads
+            const formData = new FormData();
+            formData.append("name", document.getElementById("name").value);
+            formData.append("brand", document.getElementById("brand").value);
+            formData.append("color", document.getElementById("color").value);
+            formData.append("texture", document.getElementById("texture").value);
+            formData.append("tags", document.getElementById("tags").value);
+            formData.append("price", document.getElementById("price").value);
+            formData.append("time_of_purchase", document.getElementById("time-of-purchase").value);
+            formData.append("needs_dry_washing", document.getElementById("needs-dry-washing").checked);
 
             const imageInput = document.getElementById("image");
             if (imageInput.files.length > 0) {
-                clothing.image_url = URL.createObjectURL(imageInput.files[0]);
-            } else {
-                clothing.image_url = "";
+                formData.append("image", imageInput.files[0]); // Attach the image file
             }
 
-            addClothingItem(clothing);
-            uploadForm.reset();
+            await addClothingItem(formData); // Call function to upload clothing item
+            uploadForm.reset(); // Reset the form after submission
         });
     } else {
         console.error("Upload Form not found!");
     }
 
+    // Handle filtering (placeholder functionality)
     const applyFilter = document.getElementById("apply-filter");
     if (applyFilter) {
         applyFilter.addEventListener("click", () => {
@@ -99,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Apply Filter button not found!");
     }
 
+    // Handle sorting (placeholder functionality)
     const applySort = document.getElementById("apply-sort");
     if (applySort) {
         applySort.addEventListener("click", () => {
@@ -109,5 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Apply Sort button not found!");
     }
 
+    // Fetch clothes on page load
     fetchClothes();
 });
