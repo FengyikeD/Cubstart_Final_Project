@@ -169,15 +169,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Please select a sort option.");
                 return;
             }
+
             const sortedClothes = [...clothes].sort((a, b) => {
-                if (sortOption === "price") {
+                if (sortOption === "price-asc") {
                     return (a.price || 0) - (b.price || 0);
                 }
-                if (sortOption === "time_of_purchase") {
+                if (sortOption === "price-desc") {
+                    return (b.price || 0) - (a.price || 0);
+                }
+                if (sortOption === "time_of_purchase-asc") {
                     return new Date(a.time_of_purchase || "1970-01-01") - new Date(b.time_of_purchase || "1970-01-01");
                 }
+                if (sortOption === "time_of_purchase-desc") {
+                    return new Date(b.time_of_purchase || "1970-01-01") - new Date(a.time_of_purchase || "1970-01-01");
+                }
             });
-            renderClothes(sortedClothes);
+
+            renderClothes(sortedClothes); // Re-render sorted clothes
         });
     } else {
         console.error("Apply Sort button not found!");
