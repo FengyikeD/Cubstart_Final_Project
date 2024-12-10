@@ -54,6 +54,23 @@
         </form>
     </section>
 
+    <!-- Filter and Sort Section -->
+    <div id="filter-sort-container" style="margin: 20px 0; text-align: center;">
+        <label for="tag-filter">Filter by Tags (comma-separated):</label>
+        <input type="text" id="tag-filter" placeholder="e.g., red, cotton">
+
+        <button id="apply-filter" style="margin-left: 10px;">Apply Filter</button>
+
+        <label for="sort-options" style="margin-left: 20px;">Sort By:</label>
+        <select id="sort-options">
+            <option value="" disabled selected>Select a sort option</option>
+            <option value="price">Price</option>
+            <option value="time_of_purchase">Time of Purchase</option>
+        </select>
+
+        <button id="apply-sort" style="margin-left: 10px;">Apply Sort</button>
+    </div>
+
     <!-- Clothes Gallery -->
     <section id="clothes-gallery">
         <h2>Your Closet</h2>
