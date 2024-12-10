@@ -10,10 +10,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Debugging middleware to log requests
+app.use((req, res, next) => {
+    console.log(`Request received: ${req.method} ${req.url}`);
+    next();
+});
+
 // Middleware
 app.use(express.json());
 const corsOptions = {
-    origin: "https://mylittlecloset.netlify.app", // Your Netlify domain
+    origin: "*", // Temporarily allow all origins for debugging
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 };
