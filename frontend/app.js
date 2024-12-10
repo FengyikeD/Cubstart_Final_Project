@@ -1,5 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
     console.log("DOM fully loaded");
+
+    // Toggle the visibility of the Add Clothes section
+const toggleButton = document.getElementById("toggle-add-clothes-btn");
+const addClothesSection = document.getElementById("add-clothes-section");
+
+toggleButton.addEventListener("click", () => {
+    if (addClothesSection.style.display === "none") {
+        addClothesSection.style.display = "block";
+        toggleButton.textContent = "Hide Add Clothes";
+    } else {
+        addClothesSection.style.display = "none";
+        toggleButton.textContent = "Add Clothes";
+    }
+});
 
     const BASE_URL = "https://cubstart-final-project.onrender.com/api/clothes";
 
