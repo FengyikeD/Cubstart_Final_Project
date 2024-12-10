@@ -1,11 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const Clothes = require('../models/Clothes');
+const multer = require('multer');
+const path = require('path');
+
+// Configure Multer for file storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, "uploads/"),
+    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+});
+
+const upload = multer({ storage });
 
 // POST /api/clothes - Add a new clothing item
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
     try {
-        const newClothing = new Clothes(req.body);
+        if (!req.file) {
+            return res.status(400).json({ message: "Image upload failed" });
+        }
+
+        const newClothing = new Clothes({
+            name: req.body.name,
+            brand: req.body.brand,
+            color: req.body.color,
+            texture: req.body.texture,
+            tags: req.body.tags ? req.body.tags.split(",") : [],
+            price: req.body.price,
+            time_of_purchase: req.body.time_of_purchase,
+            needs_dry_washing: req.body.needs_dry_washing === "true",
+            image_url: `/uploads/${req.file.filename}`, // Save file path
+        });
+
         const savedClothing = await newClothing.save();
         res.status(201).json(savedClothing);
     } catch (error) {
