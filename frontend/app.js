@@ -222,6 +222,28 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Apply Sort button not found!");
     }
 
+    // Clear filter and show all clothes
+    const clearFilter = document.getElementById("clear-filter");
+    if (clearFilter) {
+        clearFilter.addEventListener("click", () => {
+            document.getElementById("tag-filter").value = ""; // Clear filter input
+            renderClothes(clothes); // Re-render gallery with all clothes
+        });
+    } else {
+        console.error("Clear Filter button not found!");
+    }
+
+    // Clear sort and show all clothes
+    const clearSort = document.getElementById("clear-sort");
+    if (clearSort) {
+        clearSort.addEventListener("click", () => {
+            document.getElementById("sort-options").selectedIndex = 0; // Reset sort dropdown
+            renderClothes(clothes); // Re-render gallery with all clothes
+        });
+    } else {
+        console.error("Clear Sort button not found!");
+    }
+
     // Fetch clothes on page load
     fetchClothes();
 });
