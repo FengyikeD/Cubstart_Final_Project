@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded");
+
     const BASE_URL = "https://cubstart-final-project.onrender.com";
 
     async function fetchClothes() {
@@ -15,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderClothes(clothes) {
         const clothesContainer = document.getElementById("clothes-container");
+        if (!clothesContainer) {
+            console.error("Clothes container not found!");
+            return;
+        }
+
         clothesContainer.innerHTML = "";
         clothes.forEach(item => {
             const itemDiv = document.createElement("div");
@@ -52,41 +59,55 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    document.getElementById("apply-filter").addEventListener("click", () => {
-        const tags = document.getElementById("tag-filter").value.split(",").map(tag => tag.trim());
-        if (!tags[0]) alert("Please enter at least one tag.");
-    });
-
-    document.getElementById("apply-sort").addEventListener("click", () => {
-        const sortOption = document.getElementById("sort-options").value;
-        console.log("Selected Sort Option:", sortOption);
-    });
-
+    // Safely add event listeners
     const uploadForm = document.getElementById("upload-form");
-    uploadForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const clothing = {
+                name: document.getElementById("name").value,
+                brand: document.getElementById("brand").value,
+                color: document.getElementById("color").value,
+                texture: document.getElementById("texture").value,
+                tags: document.getElementById("tags").value.split(","),
+                price: parseFloat(document.getElementById("price").value),
+                time_of_purchase: document.getElementById("time-of-purchase").value,
+                needs_dry_washing: document.getElementById("needs-dry-washing").checked,
+            };
 
-        const clothing = {
-            name: document.getElementById("name").value,
-            brand: document.getElementById("brand").value,
-            color: document.getElementById("color").value,
-            texture: document.getElementById("texture").value,
-            tags: document.getElementById("tags").value.split(","),
-            price: parseFloat(document.getElementById("price").value),
-            time_of_purchase: document.getElementById("time-of-purchase").value,
-            needs_dry_washing: document.getElementById("needs-dry-washing").checked,
-        };
+            const imageInput = document.getElementById("image");
+            if (imageInput.files.length > 0) {
+                clothing.image_url = URL.createObjectURL(imageInput.files[0]);
+            } else {
+                clothing.image_url = "";
+            }
 
-        const imageInput = document.getElementById("image");
-        if (imageInput.files.length > 0) {
-            clothing.image_url = URL.createObjectURL(imageInput.files[0]);
-        } else {
-            clothing.image_url = "";
-        }
+            addClothingItem(clothing);
+            uploadForm.reset();
+        });
+    } else {
+        console.error("Upload Form not found!");
+    }
 
-        addClothingItem(clothing);
-        uploadForm.reset();
-    });
+    const applyFilter = document.getElementById("apply-filter");
+    if (applyFilter) {
+        applyFilter.addEventListener("click", () => {
+            const tags = document.getElementById("tag-filter").value.split(",").map(tag => tag.trim());
+            if (!tags[0]) alert("Please enter at least one tag.");
+        });
+    } else {
+        console.error("Apply Filter button not found!");
+    }
+
+    const applySort = document.getElementById("apply-sort");
+    if (applySort) {
+        applySort.addEventListener("click", () => {
+            const sortOption = document.getElementById("sort-options").value;
+            console.log("Selected Sort Option:", sortOption);
+        });
+    } else {
+        console.error("Apply Sort button not found!");
+    }
 
     fetchClothes();
 });
