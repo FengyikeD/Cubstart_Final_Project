@@ -28,7 +28,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             price: req.body.price,
             time_of_purchase: req.body.time_of_purchase,
             needs_dry_washing: req.body.needs_dry_washing === "true",
-            image_url: `/uploads/${req.file.filename}`, // Save file path
+            image_url: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`, // Full URL
         });
 
         const savedClothing = await newClothing.save();
@@ -37,6 +37,7 @@ router.post('/', upload.single('image'), async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
 
 // GET /api/clothes - Get all clothes
 router.get('/', async (req, res) => {
