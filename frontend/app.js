@@ -4,10 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchClothes() {
         try {
             const response = await fetch(BASE_URL);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch clothes: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`Failed to fetch clothes: ${response.statusText}`);
             const data = await response.json();
             console.log("Clothes data:", data);
             renderClothes(data);
@@ -33,12 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>Time of Purchase: ${item.time_of_purchase || "N/A"}</p>
                 <p>Dry Wash: ${item.needs_dry_washing ? "Yes" : "No"}</p>
             `;
-
             clothesContainer.appendChild(itemDiv);
         });
         if (clothes.length === 0) {
             clothesContainer.innerHTML = "<p>No clothes found.</p>";
-            return;
         }
     }
 
@@ -46,57 +41,25 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(BASE_URL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(clothing),
             });
-
-            if (!response.ok) {
-                throw new Error(`Failed to add clothing item: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            console.log("Added Clothing Item:", data);
-
+            if (!response.ok) throw new Error(`Failed to add clothing item: ${response.statusText}`);
+            console.log("Added Clothing Item:", await response.json());
             fetchClothes();
         } catch (error) {
             console.error("Error adding clothing item:", error);
         }
     }
 
-    fetchClothes();
-
-    // Event listener for applying tag filter
     document.getElementById("apply-filter").addEventListener("click", () => {
         const tags = document.getElementById("tag-filter").value.split(",").map(tag => tag.trim());
-        if (tags.length === 0 || tags[0] === "") {
-            alert("Please enter at least one tag.");
-            return;
-        }
-        fetchFilteredAndSortedClothes(tags, null, null);
+        if (!tags[0]) alert("Please enter at least one tag.");
     });
 
-    // Event listener for applying sort
     document.getElementById("apply-sort").addEventListener("click", () => {
         const sortOption = document.getElementById("sort-options").value;
-        let sort = null, order = null;
-
-        if (sortOption === "price-asc") {
-            sort = "price";
-            order = "asc";
-        } else if (sortOption === "price-desc") {
-            sort = "price";
-            order = "desc";
-        } else if (sortOption === "time-newest") {
-            sort = "time_of_purchase";
-            order = "desc";
-        } else if (sortOption === "time-oldest") {
-            sort = "time_of_purchase";
-            order = "asc";
-        }
-
-        fetchFilteredAndSortedClothes(null, sort, order);
+        console.log("Selected Sort Option:", sortOption);
     });
 
     const uploadForm = document.getElementById("upload-form");
@@ -112,10 +75,18 @@ document.addEventListener("DOMContentLoaded", () => {
             price: parseFloat(document.getElementById("price").value),
             time_of_purchase: document.getElementById("time-of-purchase").value,
             needs_dry_washing: document.getElementById("needs-dry-washing").checked,
-            image_url: document.getElementById("image").value,
         };
+
+        const imageInput = document.getElementById("image");
+        if (imageInput.files.length > 0) {
+            clothing.image_url = URL.createObjectURL(imageInput.files[0]);
+        } else {
+            clothing.image_url = "";
+        }
 
         addClothingItem(clothing);
         uploadForm.reset();
     });
+
+    fetchClothes();
 });
