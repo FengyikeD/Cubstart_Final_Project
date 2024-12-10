@@ -59,11 +59,16 @@
 
     <!-- Filter and Sort Section -->
     <div id="filter-sort-container" style="margin: 20px 0; text-align: center;">
+        <label for="search-name">Search by Name:</label>
+        <input type="text" id="search-name" placeholder="Enter clothing name">
+        <button id="apply-search" style="margin-left: 10px;">Search</button>
+        <button id="clear-search" style="margin-left: 10px;">Clear</button>
+        <br><br>
+    
         <label for="tag-filter">Filter by Tags (comma-separated):</label>
         <input type="text" id="tag-filter" placeholder="e.g., red, cotton">
-
         <button id="apply-filter" style="margin-left: 10px;">Filter</button>
-
+    
         <label for="sort-options" style="margin-left: 20px;">Sort By:</label>
         <select id="sort-options">
             <option value="" disabled selected>Select a sort option</option>
@@ -73,7 +78,7 @@
             <option value="time_of_purchase-desc">Time of Purchase: Newest to Oldest</option>
         </select>
         <button id="apply-sort" style="margin-left: 10px;">Sort</button>
-    </div>
+    </div>    
 
     <!-- Clothes Gallery -->
     <section id="clothes-gallery">

@@ -141,6 +141,37 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Upload Form not found!");
     }
 
+    // Search clothes by name
+    const applySearch = document.getElementById("apply-search");
+    if (applySearch) {
+        applySearch.addEventListener("click", () => {
+            const searchName = document.getElementById("search-name").value.trim().toLowerCase();
+            if (!searchName) {
+                alert("Please enter a name to search.");
+                return;
+            }
+
+            const searchedClothes = clothes.filter(item =>
+                item.name.toLowerCase().includes(searchName)
+            );
+
+            renderClothes(searchedClothes); // Re-render gallery with search results
+        });
+    } else {
+        console.error("Search button not found!");
+    }
+
+    // Clear search and show all clothes
+    const clearSearch = document.getElementById("clear-search");
+    if (clearSearch) {
+        clearSearch.addEventListener("click", () => {
+            document.getElementById("search-name").value = ""; // Clear search input
+            renderClothes(clothes); // Re-render gallery with all clothes
+        });
+    } else {
+        console.error("Clear Search button not found!");
+    }
+
     // Filter clothes
     const applyFilter = document.getElementById("apply-filter");
     if (applyFilter) {
