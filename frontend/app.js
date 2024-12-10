@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded");
 
-    const BASE_URL = "https://cubstart-final-project.onrender.com";
+    const BASE_URL = "https://cubstart-final-project.onrender.com/api/clothes";
 
     async function fetchClothes() {
         try {
