@@ -16,6 +16,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Delete a clothing item
+async function deleteClothingItem(id, name) {
+    if (!confirm(`Are you sure you want to delete "${name}" from your closet permanently?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/${id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) throw new Error(`Failed to delete clothing item: ${response.statusText}`);
+
+        console.log(`Clothing item '${name}' deleted successfully`);
+        fetchClothes(); // Refresh the gallery
+    } catch (error) {
+        console.error("Error deleting clothing item:", error);
+    }
+}
+
     // Render clothes in the gallery
     function renderClothes(clothes) {
         const clothesContainer = document.getElementById("clothes-container");
@@ -23,12 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Clothes container not found!");
             return;
         }
-
+    
         clothesContainer.innerHTML = "";
         clothes.forEach(item => {
             const itemDiv = document.createElement("div");
             itemDiv.classList.add("clothing-item");
-
+    
             itemDiv.innerHTML = `
                 <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}">
                 <h3>${item.name}</h3>
@@ -38,14 +58,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>Price: $${item.price || "N/A"}</p>
                 <p>Time of Purchase: ${item.time_of_purchase || "N/A"}</p>
                 <p>Dry Wash: ${item.needs_dry_washing ? "Yes" : "No"}</p>
+                <button class="delete-btn" data-id="${item._id}" data-name="${item.name}">Delete</button>
             `;
+    
             clothesContainer.appendChild(itemDiv);
         });
-
+    
+        // Add event listeners for delete buttons
+        const deleteButtons = document.querySelectorAll(".delete-btn");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = event.target.getAttribute("data-id");
+                const name = event.target.getAttribute("data-name");
+                deleteClothingItem(id, name);
+            });
+        });
+    
         if (clothes.length === 0) {
             clothesContainer.innerHTML = "<p>No clothes found.</p>";
         }
-    }
+    }    
 
     // Add a clothing item to the backend
     async function addClothingItem(formData) {

@@ -60,4 +60,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+// DELETE /api/clothes/:id - Delete a clothing item by ID
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedClothing = await Clothes.findByIdAndDelete(id);
+
+        if (!deletedClothing) {
+            return res.status(404).json({ message: "Clothing item not found" });
+        }
+
+        res.status(200).json({ message: `Clothing item '${deletedClothing.name}' deleted successfully` });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;
